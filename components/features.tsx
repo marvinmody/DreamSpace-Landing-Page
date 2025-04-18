@@ -2,7 +2,7 @@
 
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
-import { ArrowRight, Zap, Layers, PenTool, Palette, LayoutGrid, Users } from "lucide-react"
+import { Zap, Layers, PenTool, Palette, LayoutGrid, Users } from "lucide-react"
 
 export default function Features() {
   const ref = useRef(null)
@@ -96,12 +96,6 @@ export default function Features() {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
               <p className="text-white/70 mb-4">{feature.description}</p>
-              <a
-                href="#"
-                className="inline-flex items-center text-blue-400 font-medium hover:text-blue-300 transition-colors"
-              >
-                Learn more <ArrowRight className="ml-1 h-4 w-4" />
-              </a>
             </motion.div>
           ))}
         </motion.div>

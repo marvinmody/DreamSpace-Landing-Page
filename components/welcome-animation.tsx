@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -15,18 +14,20 @@ export default function WelcomeAnimation() {
     if (showAnimation) {
       // Save the current overflow style
       const originalStyle = window.getComputedStyle(document.body).overflow
-
       // Prevent scrolling
       document.body.style.overflow = "hidden"
+      // Custom cursor for the welcome screen
+      document.body.style.cursor = "auto"
 
       // Restore scrolling when animation is done
       return () => {
         document.body.style.overflow = originalStyle
+        document.body.style.cursor = "auto"
       }
     }
   }, [showAnimation])
 
-  // Generate stars for the animation
+  // Starry background animation
   useEffect(() => {
     if (!canvasRef.current || !showAnimation) return
 
@@ -50,20 +51,16 @@ export default function WelcomeAnimation() {
       size: number
       opacity: number
       speed: number
-      twinkleSpeed: number
-      twinkleDirection: number
     }[] = []
 
     // Create stars - smaller and more numerous for realism
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 300; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 1.2, // Smaller stars (max 1.2px)
-        opacity: Math.random() * 0.8 + 0.2, // Varied opacity
-        speed: Math.random() * 0.05 + 0.01, // Slower movement for realism
-        twinkleSpeed: Math.random() * 0.01 + 0.005, // Speed of twinkling
-        twinkleDirection: Math.random() > 0.5 ? 1 : -1, // Direction of opacity change
+        size: Math.random() * 1, // Very small stars
+        opacity: Math.random() * 0.5 + 0.1, // Subtle opacity
+        speed: Math.random() * 0.02 + 0.005, // Very slow movement
       })
     }
 
@@ -72,17 +69,10 @@ export default function WelcomeAnimation() {
       if (!ctx) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      // Draw stars with twinkling effect
+      // Draw stars with subtle twinkling
       stars.forEach((star, i) => {
-        // Update star opacity for twinkling
-        star.opacity += star.twinkleSpeed * star.twinkleDirection
-        if (star.opacity > 1) {
-          star.opacity = 1
-          star.twinkleDirection = -1
-        } else if (star.opacity < 0.2) {
-          star.opacity = 0.2
-          star.twinkleDirection = 1
-        }
+        // Subtle opacity variation
+        star.opacity = 0.1 + Math.sin(Date.now() * 0.001 + i) * 0.1 + 0.3
 
         // Draw star
         ctx.beginPath()
@@ -90,7 +80,7 @@ export default function WelcomeAnimation() {
         ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`
         ctx.fill()
 
-        // Move stars very slightly for subtle movement
+        // Move stars very slightly
         stars[i].y += star.speed
 
         // Reset stars that go off screen
@@ -99,31 +89,6 @@ export default function WelcomeAnimation() {
           stars[i].x = Math.random() * canvas.width
         }
       })
-
-      // Occasionally add a shooting star effect (more rare and subtle)
-      if (Math.random() < 0.005) {
-        const shootingStar = {
-          x: Math.random() * canvas.width,
-          y: 0,
-          length: Math.random() * 50 + 20,
-          speed: Math.random() * 5 + 3,
-          angle: Math.PI / 4 + (Math.random() * Math.PI) / 4,
-        }
-
-        ctx.beginPath()
-        ctx.moveTo(shootingStar.x, shootingStar.y)
-        const endX = shootingStar.x + Math.cos(shootingStar.angle) * shootingStar.length
-        const endY = shootingStar.y + Math.sin(shootingStar.angle) * shootingStar.length
-        ctx.lineTo(endX, endY)
-
-        const gradient = ctx.createLinearGradient(shootingStar.x, shootingStar.y, endX, endY)
-        gradient.addColorStop(0, "rgba(255, 255, 255, 0.7)")
-        gradient.addColorStop(1, "rgba(255, 255, 255, 0)")
-
-        ctx.strokeStyle = gradient
-        ctx.lineWidth = 1.5
-        ctx.stroke()
-      }
 
       animationRef.current = requestAnimationFrame(animate)
     }
@@ -138,22 +103,18 @@ export default function WelcomeAnimation() {
     }
   }, [showAnimation])
 
-  // Enhanced smooth transition when clicking "Enter Dreamspace"
+  // Smooth transition when clicking "Enter Dreamspace"
   const completeAnimation = () => {
     if (isTransitioning) return // Prevent multiple clicks
 
     setIsTransitioning(true)
 
-    // Smoother, longer transition
+    // Simple fade transition
     setTimeout(() => {
       sessionStorage.setItem("hasSeenIntro", "true")
       setShowAnimation(false)
-
-      // Add a small delay before enabling scroll to ensure smooth transition
-      setTimeout(() => {
-        document.body.style.overflow = "auto"
-      }, 100)
-    }, 2200) // Increased duration for smoother transition
+      document.body.style.overflow = "auto"
+    }, 800)
   }
 
   // Check if we've already shown the animation in this session
@@ -175,32 +136,21 @@ export default function WelcomeAnimation() {
           exit={{
             opacity: 0,
             transition: {
-              duration: 2.2, // Increased for smoother transition
-              ease: [0.1, 0.9, 0.2, 1], // Custom cubic-bezier for silky smooth transition
+              duration: 0.8,
+              ease: "easeInOut",
             },
           }}
         >
           {/* Stars canvas */}
           <canvas ref={canvasRef} className="absolute inset-0" />
 
-          {/* Subtle radial gradient for depth */}
-          <div className="absolute inset-0 bg-radial-gradient pointer-events-none"></div>
-
           <div className="relative w-full h-full flex flex-col items-center justify-center z-10">
             {/* Logo animation */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={
-                isTransitioning
-                  ? {
-                      scale: 1.1,
-                      opacity: 0,
-                      transition: { duration: 1.8, ease: [0.1, 0.9, 0.2, 1] }, // Smoother transition
-                    }
-                  : {}
-              }
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               className="relative z-10 mb-8"
             >
               <img
@@ -215,18 +165,10 @@ export default function WelcomeAnimation() {
             {/* Text animations */}
             <div className="text-center relative z-10">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={
-                  isTransitioning
-                    ? {
-                        y: -20,
-                        opacity: 0,
-                        transition: { duration: 1.0 }, // Increased for smoother transition
-                      }
-                    : {}
-                }
-                transition={{ delay: 0.8, duration: 0.8 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
                 className="mb-4"
               >
                 <img
@@ -237,128 +179,65 @@ export default function WelcomeAnimation() {
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={
-                  isTransitioning
-                    ? {
-                        y: -20,
-                        opacity: 0,
-                        transition: { duration: 0.8, delay: 0.1 },
-                      }
-                    : {}
-                }
-                transition={{ delay: 1.2, duration: 0.8 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
                 className="text-3xl md:text-4xl font-light text-white mb-8"
               >
                 Where dreams become <span className="font-medium">design</span>
               </motion.h1>
 
-              {/* Enhanced modern button with star-themed hover effects */}
+              {/* Enhanced button with integrated hover effect */}
               <motion.button
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={
-                  isTransitioning
-                    ? {
-                        y: 20,
-                        opacity: 0,
-                        scale: 0.9,
-                        transition: { duration: 0.7, delay: 0.2 },
-                      }
-                    : {}
-                }
-                transition={{ delay: 1.6, duration: 0.8 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
                 onClick={completeAnimation}
-                onMouseEnter={() => setIsButtonHovered(true)}
-                onMouseLeave={() => setIsButtonHovered(false)}
-                className="relative px-10 py-4 bg-transparent text-white rounded-full font-medium text-lg transition-all duration-500 overflow-hidden group border border-white/20"
+                className="interactive relative px-10 py-4 bg-transparent text-white rounded-full font-medium text-lg transition-all duration-300 overflow-hidden group border border-white/20"
                 disabled={isTransitioning}
               >
-                {/* Button background with star-like particles */}
+                {/* Enhanced button background with smoother transition */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-r from-blue-600/80 to-blue-400/80 transition-opacity duration-500 ${
-                    isButtonHovered ? "opacity-100" : "opacity-0"
-                  }`}
+                  className="absolute inset-0 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(59, 130, 246, 0.3))",
+                  }}
                 ></div>
 
-                {/* Animated particles inside button on hover */}
-                {isButtonHovered && !isTransitioning && (
-                  <div className="absolute inset-0 overflow-hidden">
-                    {[...Array(20)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-white rounded-full"
-                        initial={{
-                          x: Math.random() * 100 + 50,
-                          y: Math.random() * 40 + 10,
-                          opacity: 0,
-                        }}
-                        animate={{
-                          x: [null, Math.random() * 200],
-                          y: [null, Math.random() * 60 - 10],
-                          opacity: [0, 0.8, 0],
-                        }}
-                        transition={{
-                          duration: 1 + Math.random(),
-                          repeat: Number.POSITIVE_INFINITY,
-                          repeatType: "loop",
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {/* Button glow effect */}
+                {/* Subtle glow effect */}
                 <div
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    isButtonHovered ? "opacity-100" : "opacity-0"
-                  }`}
+                  className="absolute inset-0 transition-opacity duration-500 ease-out opacity-0 group-hover:opacity-100"
                   style={{
-                    boxShadow: "0 0 20px 5px rgba(59, 130, 246, 0.3)",
+                    boxShadow: "0 0 20px 5px rgba(59, 130, 246, 0.15)",
                   }}
                 ></div>
 
                 {/* Button text with subtle animation */}
                 <span className="relative z-10 flex items-center justify-center">
-                  <span className={`transition-transform duration-500 ${isButtonHovered ? "scale-110" : "scale-100"}`}>
-                    Enter Dreamspace
-                  </span>
-                  <motion.svg
+                  <span className="transition-transform duration-300 group-hover:scale-105">Enter Dreamspace</span>
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`h-5 w-5 ml-2 transition-all duration-500 ${
-                      isButtonHovered ? "translate-x-1 opacity-100" : "opacity-70"
-                    }`}
+                    className="h-5 w-5 ml-2 transition-all duration-300 transform group-hover:translate-x-1"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </motion.svg>
+                  </svg>
                 </span>
               </motion.button>
             </div>
           </div>
 
-          {/* Enhanced transition overlay with radial gradient for a more dramatic effect */}
+          {/* Simple fade transition */}
           {isTransitioning && (
             <motion.div
               className="absolute inset-0 z-20 bg-black"
               initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                background: [
-                  "radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
-                  "radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,1) 100%)",
-                  "rgba(0,0,0,1)",
-                ],
-              }}
-              transition={{
-                duration: 2.0,
-                delay: 0.2,
-                times: [0, 0.5, 1],
-                ease: [0.1, 0.9, 0.2, 1], // Smoother easing
-              }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
             />
           )}
         </motion.div>

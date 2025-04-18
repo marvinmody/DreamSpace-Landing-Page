@@ -80,7 +80,7 @@ function FeatureCard({ icon, title, description }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
       viewport={{ once: true }}
-      className="bg-blue-900/20 backdrop-blur-sm border border-blue-700/20 p-5 rounded-xl"
+      className="bg-blue-900/20 backdrop-blur-sm border border-blue-700/20 p-5 rounded-xl interactive"
     >
       <div className="flex items-start">
         <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2.5 rounded-lg mr-4">

@@ -78,25 +78,25 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection("home")}
-              className="text-white hover:text-white/80 transition-colors font-medium"
+              className="text-white hover:text-white/80 transition-colors font-medium interactive"
             >
               Home
             </button>
             <button
               onClick={() => scrollToSection("about")}
-              className="text-white hover:text-white/80 transition-colors font-medium"
+              className="text-white hover:text-white/80 transition-colors font-medium interactive"
             >
               About
             </button>
             <button
               onClick={() => scrollToSection("features")}
-              className="text-white hover:text-white/80 transition-colors font-medium"
+              className="text-white hover:text-white/80 transition-colors font-medium interactive"
             >
               Features
             </button>
             <button
               onClick={() => scrollToSection("demo")}
-              className="text-white hover:text-white/80 transition-colors font-medium"
+              className="text-white hover:text-white/80 transition-colors font-medium interactive"
             >
               Demo
             </button>
@@ -106,7 +106,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <Button
               onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
-              className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium transition-all duration-300 relative overflow-hidden"
+              className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium transition-all duration-300 relative overflow-hidden interactive"
             >
               Get Started
             </Button>
@@ -137,30 +137,30 @@ export default function Navbar() {
               <nav className="flex flex-col space-y-4">
                 <button
                   onClick={() => scrollToSection("home")}
-                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left"
+                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left interactive"
                 >
                   Home
                 </button>
                 <button
                   onClick={() => scrollToSection("about")}
-                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left"
+                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left interactive"
                 >
                   About
                 </button>
                 <button
                   onClick={() => scrollToSection("features")}
-                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left"
+                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left interactive"
                 >
                   Features
                 </button>
                 <button
                   onClick={() => scrollToSection("demo")}
-                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left"
+                  className="text-white hover:text-white/80 transition-colors font-medium py-2 text-left interactive"
                 >
                   Demo
                 </button>
                 <Button
-                  className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium w-full mt-2 transition-all duration-300"
+                  className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium w-full mt-2 transition-all duration-300 interactive"
                   onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
                 >
                   Get Started

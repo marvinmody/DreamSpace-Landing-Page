@@ -40,7 +40,7 @@ export default function Footer() {
 
           <button
             onClick={scrollToTop}
-            className="group flex items-center text-white/70 hover:text-blue-400 transition-colors bg-white/5 px-4 py-2 rounded-full"
+            className="group flex items-center text-white/70 hover:text-blue-400 transition-colors bg-white/5 px-4 py-2 rounded-full interactive"
           >
             <span className="mr-2">Back to top</span>
             <ArrowUp className="h-4 w-4 group-hover:-translate-y-1 transition-transform duration-300" />
@@ -71,7 +71,7 @@ export default function Footer() {
                   href="https://www.linkedin.com/in/marvinrm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-white/60 hover:text-blue-400 transition-colors"
+                  className="flex items-center text-white/60 hover:text-blue-400 transition-colors interactive"
                 >
                   <Linkedin size={18} className="mr-3 text-blue-400 flex-shrink-0" />
                   <span className="group-hover:translate-x-1 transition-transform duration-300">Marvin Mody</span>
@@ -82,7 +82,7 @@ export default function Footer() {
                   href="https://www.linkedin.com/in/ryan-johnson-559b822b6/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-white/60 hover:text-blue-400 transition-colors"
+                  className="flex items-center text-white/60 hover:text-blue-400 transition-colors interactive"
                 >
                   <Linkedin size={18} className="mr-3 text-blue-400 flex-shrink-0" />
                   <span className="group-hover:translate-x-1 transition-transform duration-300">Ryan Johnson</span>

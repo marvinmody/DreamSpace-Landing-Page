@@ -6,30 +6,69 @@ import { ArrowRight, ChevronDown } from "lucide-react"
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [isHovered, setIsHovered] = useState(false)
   const { scrollY } = useScroll()
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-
-  // Parallax effect for content
   const contentY = useTransform(scrollY, [0, 500], [0, 100])
   const opacity = useTransform(scrollY, [0, 300], [1, 0])
 
-  // Handle video loaded state
+  // Handle video loading and playing
   useEffect(() => {
-    const videoElement = document.getElementById("earth-video") as HTMLVideoElement
-    if (videoElement) {
-      videoElement.play().catch((error) => {
-        console.error("Video play failed:", error)
-        setIsVideoLoaded(true) // Show content even if video fails
+    console.log("Hero component mounted")
+
+    if (videoRef.current) {
+      console.log("Video element exists")
+
+      // Log video element properties
+      console.log("Video element properties:", {
+        src: videoRef.current.src,
+        currentSrc: videoRef.current.currentSrc,
+        readyState: videoRef.current.readyState,
+        networkState: videoRef.current.networkState,
+        error: videoRef.current.error,
       })
+
+      // Add event listeners for debugging
+      const handleCanPlay = () => console.log("Video can play")
+      const handlePlaying = () => console.log("Video is playing")
+      const handleError = (e: Event) => console.error("Video error:", videoRef.current?.error)
+      const handleStalled = () => console.log("Video stalled")
+      const handleWaiting = () => console.log("Video waiting")
+      const handleLoadStart = () => console.log("Video load started")
+      const handleProgress = () => console.log("Video progress update")
+
+      videoRef.current.addEventListener("canplay", handleCanPlay)
+      videoRef.current.addEventListener("playing", handlePlaying)
+      videoRef.current.addEventListener("error", handleError)
+      videoRef.current.addEventListener("stalled", handleStalled)
+      videoRef.current.addEventListener("waiting", handleWaiting)
+      videoRef.current.addEventListener("loadstart", handleLoadStart)
+      videoRef.current.addEventListener("progress", handleProgress)
+
+      // Force load and play
+      videoRef.current.load()
+
+      // Try to play after a short delay
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.play().catch((err) => {
+            console.error("Error playing video:", err)
+          })
+        }
+      }, 1000)
+
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener("canplay", handleCanPlay)
+          videoRef.current.removeEventListener("playing", handlePlaying)
+          videoRef.current.removeEventListener("error", handleError)
+          videoRef.current.removeEventListener("stalled", handleStalled)
+          videoRef.current.removeEventListener("waiting", handleWaiting)
+          videoRef.current.removeEventListener("loadstart", handleLoadStart)
+          videoRef.current.removeEventListener("progress", handleProgress)
+        }
+      }
     }
-
-    // Set loaded to true after a timeout as fallback
-    const timer = setTimeout(() => {
-      setIsVideoLoaded(true)
-    }, 1000)
-
-    return () => clearTimeout(timer)
   }, [])
 
   // Smooth scroll function
@@ -42,42 +81,30 @@ export default function Hero() {
 
   return (
     <section ref={heroRef} id="home" className="relative min-h-screen overflow-hidden">
-      {/* Earth video background */}
-      <div className="absolute inset-0 w-full h-full z-0">
+      {/* Background color as fallback */}
+      <div className="absolute inset-0 bg-black z-0"></div>
+
+      {/* Earth video background - USING DIRECT URL */}
+      <div className="absolute inset-0 w-full h-full z-1">
         {/* Video overlay for better text contrast */}
         <div className="absolute inset-0 bg-black/30 z-10"></div>
 
-        {/* Loading placeholder until video loads */}
-        {!isVideoLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-blue-950/30 to-blue-900/20 z-5 flex items-center justify-center">
-            <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-          </div>
-        )}
-
-        {/* Earth video */}
+        {/* DIRECT URL VIDEO ELEMENT */}
         <video
-          id="earth-video"
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-          onLoadedData={() => setIsVideoLoaded(true)}
+          className="absolute inset-0 w-full h-full object-cover z-5"
+          style={{ display: "block" }}
         >
-          <source src="/earth-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
-        >
-          <source src="/earth-from-space.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
+          {/* Using both local path and direct URL for maximum compatibility */}
+          <source src="/videos/background-video.mp4" type="video/mp4" />
+          <source
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/28531-370317126_small-efAOZ3th4YEzId3AmiwLzgzefN1hsI.mp4"
+            type="video/mp4"
+          />
         </video>
       </div>
 

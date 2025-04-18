@@ -230,3 +230,21 @@
 .fade-in-complete {
   opacity: 1;
 }
+
+/* Minimal cursor styles */
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
+}
+
+/* Custom cursor styles */
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
+}
+
+.interactive:hover {
+  /* Add subtle hover effect for interactive elements */
+  transform: translateY(-1px);
+  transition: transform 0.2s ease-out;
+}

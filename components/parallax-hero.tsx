@@ -241,7 +241,7 @@ export default function ParallaxHero() {
             className="flex flex-col sm:flex-row gap-5 mb-12"
           >
             <Button
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-lg py-6 px-10 rounded-xl shadow-lg transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl border border-blue-500/10 group"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-lg py-6 px-10 rounded-xl shadow-lg transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl border border-blue-500/10 group interactive"
               onClick={scrollToDemo}
             >
               <span className="relative">
@@ -252,7 +252,7 @@ export default function ParallaxHero() {
             </Button>
             <Button
               variant="outline"
-              className="text-blue-600 border-blue-600 hover:bg-blue-50 text-lg py-6 px-10 rounded-xl transition-all duration-300 hover:shadow-md group"
+              className="text-blue-600 border-blue-600 hover:bg-blue-50 text-lg py-6 px-10 rounded-xl transition-all duration-300 hover:shadow-md group interactive"
               onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
             >
               <span className="relative">
