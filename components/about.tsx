@@ -95,7 +95,18 @@ export default function About() {
   return (
     <section id="about" className="relative py-24 bg-gradient-to-b from-blue-900 to-blue-800">
       {/* Top gradient transition from hero section */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-900/0 to-blue-900 -mt-32 z-10"></div>
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-900/0 to-blue-900 -mt-32 z-10">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
+        >
+          <source src="/earth-from-space.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       {/* Bottom gradient transition to next section */}
 

@@ -51,6 +51,17 @@ export default function ParallaxHero() {
         className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{ transform: `translateY(${getParallaxY(-0.1)}px)` }}
       >
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute w-full h-full object-cover opacity-30 mix-blend-overlay"
+          style={{ transform: `translateY(${getParallaxY(-0.1)}px)` }}
+        >
+          <source src="/earth-from-space.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-500/10 via-transparent to-emerald-500/10"></div>
         <div
           className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-blue-500/15 blur-3xl animate-pulse"

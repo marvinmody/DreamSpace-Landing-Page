@@ -68,6 +68,17 @@ export default function Hero() {
           <source src="/earth-video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
+        >
+          <source src="/earth-from-space.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       {/* Subtle overlay gradient */}
