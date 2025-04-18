@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 
 export default function ClosingCta() {
@@ -30,12 +32,16 @@ export default function ClosingCta() {
             journey today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white hover:bg-white/90 text-indigo-900 px-8 py-6 text-lg rounded-lg">
+            <Button
+              className="bg-white hover:bg-white/90 text-indigo-900 px-8 py-6 text-lg rounded-lg"
+              onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
+            >
               Get Started for Free
             </Button>
             <Button
               variant="outline"
               className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg rounded-lg"
+              onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
             >
               Schedule a Demo
             </Button>

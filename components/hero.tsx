@@ -83,7 +83,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1.2, ease: [0.1, 0.9, 0.2, 1] }}
             className="mb-6"
           >
             <img
@@ -97,7 +97,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.1, 0.9, 0.2, 1] }}
             className="mb-6"
           >
             <img
@@ -105,15 +105,23 @@ export default function Hero() {
               alt="dreamspace"
               className="h-16 md:h-20 mx-auto invert"
             />
-            <h2 className="text-3xl md:text-4xl text-white/90 mt-3 font-light">Design Your Reality</h2>
+            <h2
+              className="text-3xl md:text-4xl text-white/90 mt-3 font-light tracking-wider"
+              style={{ fontFamily: "'Raleway', sans-serif", letterSpacing: "0.15em" }}
+            >
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white font-bold">
+                DESIGN YOUR REALITY
+              </span>
+            </h2>
           </motion.div>
 
           {/* Subheadline - Larger text */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed"
+            transition={{ duration: 1.2, delay: 0.5, ease: [0.1, 0.9, 0.2, 1] }}
+            className="text-xl md:text-2xl text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed tracking-wide"
+            style={{ fontFamily: "'Montserrat', sans-serif", letterSpacing: "0.05em", fontWeight: 300 }}
           >
             Transform your living spaces with AI-powered design. Visualize, customize, and bring your interior dreams to
             life with stunning precision.
@@ -123,11 +131,11 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 1.2, delay: 0.7, ease: [0.1, 0.9, 0.2, 1] }}
             className="flex flex-col sm:flex-row gap-6 justify-center"
           >
             <button
-              onClick={() => scrollToSection("demo")}
+              onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-blue-600 rounded-full overflow-hidden shadow-lg hover:shadow-blue-500/30 transition-all duration-300"

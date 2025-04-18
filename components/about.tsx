@@ -115,7 +115,7 @@ export default function About() {
             <p className="text-xl text-blue-100 mb-6 leading-relaxed">
               DreamSpace is an innovative platform that combines artificial intelligence with interior design to help
               you visualize and create your perfect living space. Our cutting-edge technology allows you to experiment
-              with different styles, colors, and furniture arrangements in a realistic 3D environment.
+              with different styles, colors, and furniture arrangements in an isometric environment.
             </p>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Whether you're renovating your home, moving to a new place, or just looking for inspiration, DreamSpace

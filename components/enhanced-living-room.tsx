@@ -3,6 +3,8 @@
 import { useRef, useState, useEffect, useCallback } from "react"
 import * as THREE from "three"
 import { debounce, throttle } from "lodash"
+import { motion, AnimatePresence } from "framer-motion"
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip"
 
 export default function EnhancedLivingRoom() {
   const mountRef = useRef<HTMLDivElement>(null)
@@ -10,6 +12,8 @@ export default function EnhancedLivingRoom() {
   const [selectedItem, setSelectedItem] = useState<number | null>(null)
   const [instructions, setInstructions] = useState(true)
   const [editMode, setEditMode] = useState(true)
+  const [showControls, setShowControls] = useState(true)
+  const [selectedItemDetails, setSelectedItemDetails] = useState<any>(null)
 
   // Scene references
   const sceneRef = useRef<THREE.Scene | null>(null)
@@ -40,7 +44,7 @@ export default function EnhancedLivingRoom() {
 
   // Improved furniture layout with better positioning
   const [furniture, setFurniture] = useState([
-    { id: 1, name: "Sofa", color: "#5077a8", position: [0, 0.4, -1.5], size: [2.2, 0.8, 1], rotation: 0 },
+    { id: 1, name: "Modern Sofa", color: "#5077a8", position: [0, 0.4, -1.5], size: [2.2, 0.8, 1], rotation: 0 },
     { id: 2, name: "Coffee Table", color: "#5c3c24", position: [0, 0.3, -2.8], size: [1.3, 0.5, 0.7], rotation: 0 },
     { id: 3, name: "Bookshelf", color: "#5c3c24", position: [-2.8, 1.2, -2.8], size: [1.5, 2.4, 0.4], rotation: 0 },
     { id: 4, name: "Armchair", color: "#7296c4", position: [2.0, 0.5, -2.0], size: [1, 1, 1], rotation: -0.7 },
@@ -51,14 +55,14 @@ export default function EnhancedLivingRoom() {
     { id: 9, name: "Side Table", color: "#5c3c24", position: [-1.8, 0.4, -1.5], size: [0.7, 0.7, 0.7], rotation: 0 },
     {
       id: 10,
-      name: "Splatter Painting",
+      name: "Abstract Art",
       color: "#d4a76a",
       position: [-3.38, 2, 0],
       size: [0.05, 1.2, 1.8],
       rotation: 0,
       wall: "left",
     },
-    { id: 11, name: "TV", color: "#1a1a1a", position: [0, 1.5, 2.2], size: [1.8, 1, 0.1], rotation: Math.PI },
+    { id: 11, name: "Smart TV", color: "#1a1a1a", position: [0, 1.5, 2.2], size: [1.8, 1, 0.1], rotation: Math.PI },
   ])
 
   // Texture cache
@@ -162,9 +166,9 @@ export default function EnhancedLivingRoom() {
     })
   }, [createCachedTexture])
 
-  // Create a fabric texture
   const createFabricTexture = useCallback(
     (color = "#E0E0E0") => {
+      // Implementation remains the same
       return createCachedTexture(`fabric-${color}`, () => {
         const canvas = document.createElement("canvas")
         canvas.width = 256
@@ -194,8 +198,18 @@ export default function EnhancedLivingRoom() {
     [createCachedTexture],
   )
 
-  // Create a marble texture
+  // Darken a color by a percentage
+  const darkenColor = useCallback((color: string, percent: number): string => {
+    const num = Number.parseInt(color.replace("#", ""), 16)
+    const amt = Math.round(2.55 * percent)
+    const R = Math.max(0, (num >> 16) - amt)
+    const G = Math.max(0, ((num >> 8) & 0x00ff) - amt)
+    const B = Math.max(0, (num & 0x0000ff) - amt)
+    return "#" + (0x1000000 + (R << 16) + (G << 8) + B).toString(16).slice(1)
+  }, [])
+
   const createMarbleTexture = useCallback(() => {
+    // Implementation remains the same
     return createCachedTexture("marble", () => {
       const canvas = document.createElement("canvas")
       canvas.width = 1024 // Increased resolution
@@ -265,8 +279,8 @@ export default function EnhancedLivingRoom() {
     })
   }, [createCachedTexture])
 
-  // Create a TV content texture
   const createTVContentTexture = useCallback(() => {
+    // Implementation remains the same
     return createCachedTexture("tv-content", () => {
       const canvas = document.createElement("canvas")
       canvas.width = 512
@@ -331,8 +345,8 @@ export default function EnhancedLivingRoom() {
     })
   }, [createCachedTexture])
 
-  // Create an enhanced splatter painting texture
   const createSplatterPaintingTexture = useCallback(() => {
+    // Implementation remains the same
     return createCachedTexture("splatter-painting", () => {
       const canvas = document.createElement("canvas")
       canvas.width = 1024
@@ -454,7 +468,6 @@ export default function EnhancedLivingRoom() {
     })
   }, [createCachedTexture])
 
-  // Create a carpet texture
   const createCarpetTexture = useCallback(
     (color = "#D2B48C") => {
       return createCachedTexture(`carpet-${color}`, () => {
@@ -489,16 +502,6 @@ export default function EnhancedLivingRoom() {
     },
     [createCachedTexture],
   )
-
-  // Darken a color by a percentage
-  const darkenColor = useCallback((color: string, percent: number): string => {
-    const num = Number.parseInt(color.replace("#", ""), 16)
-    const amt = Math.round(2.55 * percent)
-    const R = Math.max(0, (num >> 16) - amt)
-    const G = Math.max(0, ((num >> 8) & 0x00ff) - amt)
-    const B = Math.max(0, (num & 0x0000ff) - amt)
-    return "#" + (0x1000000 + (R << 16) + (G << 8) + B).toString(16).slice(1)
-  }, [])
 
   // Create a sofa with detailed cushions and pillows
   const createSofa = useCallback(
@@ -1943,62 +1946,342 @@ export default function EnhancedLivingRoom() {
     instructions,
   ])
 
+  // The UI component rendering starts here
   return (
-    <div className="flex flex-col h-full">
-      <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-        <h2 className="text-lg font-bold">Cozy Living Room Designer</h2>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setEditMode(!editMode)}
-            className={`px-3 py-1 rounded ${
-              editMode ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"
-            } transition-colors`}
-          >
-            {editMode ? "Exit Edit Mode" : "Enter Edit Mode"}
-          </button>
-          <div className="text-xs flex flex-col items-end">
-            <p>Click to select and drag furniture. Use the green circle to rotate.</p>
-            <p>Press 'E' to toggle edit mode.</p>
+    <TooltipProvider>
+      <div className="flex flex-col h-full bg-gradient-to-b from-slate-900 to-indigo-950 rounded-xl overflow-hidden">
+        {/* Top Bar with controls */}
+        <div className="bg-gradient-to-r from-blue-900/80 to-indigo-900/80 backdrop-blur-md border-b border-white/10 px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+            <h2 className="text-base font-medium text-white">DreamSpace Designer</h2>
           </div>
+
+          <div className="flex items-center space-x-3">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setEditMode(!editMode)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                    editMode
+                      ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                >
+                  {editMode ? "Editing Active" : "View Mode"}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">{editMode ? "Exit edit mode" : "Enter edit mode to modify room"}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setShowControls(!showControls)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800/50 hover:bg-slate-700/50 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-blue-200"
+                  >
+                    {showControls ? (
+                      <>
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </>
+                    ) : (
+                      <>
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="12" cy="5" r="1" />
+                        <circle cx="12" cy="19" r="1" />
+                      </>
+                    )}
+                  </svg>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs">{showControls ? "Hide controls" : "Show controls"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div className="flex-1 relative">
+          {/* 3D Room Rendering Area */}
+          <div className="absolute inset-0" ref={mountRef}></div>
+
+          {/* Selected item details panel */}
+          <AnimatePresence>
+            {selectedItem && showControls && (
+              <motion.div
+                initial={{ x: -280, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -280, opacity: 0 }}
+                transition={{ type: "spring", damping: 20 }}
+                className="absolute top-4 left-4 w-64 bg-slate-800/80 backdrop-blur-md rounded-lg border border-white/10 p-4 text-white shadow-lg"
+              >
+                <h3 className="text-sm font-semibold mb-2 flex items-center">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
+                  {furniture.find((i) => i.id === selectedItem)?.name || "Selected Item"}
+                </h3>
+                <div className="space-y-2 text-xs text-blue-200/90">
+                  <p>Use the green ring to rotate the item</p>
+                  <p>Drag anywhere on the item to reposition</p>
+                  <p>Click outside to deselect</p>
+                </div>
+                <div className="mt-3 pt-3 border-t border-white/10">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-blue-200/90">Position</span>
+                    <span className="text-xs font-mono bg-slate-700 px-1.5 py-0.5 rounded">
+                      {furniture
+                        .find((i) => i.id === selectedItem)
+                        ?.position.map((p) => p.toFixed(1))
+                        .join(", ")}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Controls panel */}
+          <AnimatePresence>
+            {showControls && (
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 50, opacity: 0 }}
+                transition={{ type: "spring", damping: 20 }}
+                className="absolute bottom-4 right-4 bg-slate-800/80 backdrop-blur-md rounded-lg border border-white/10 overflow-hidden"
+              >
+                <div className="flex flex-col divide-y divide-white/5">
+                  <ControlButton
+                    icon="zoom-in"
+                    tooltip="Zoom In"
+                    onClick={() => {
+                      /* Zoom in function */
+                    }}
+                  />
+                  <ControlButton
+                    icon="zoom-out"
+                    tooltip="Zoom Out"
+                    onClick={() => {
+                      /* Zoom out function */
+                    }}
+                  />
+                  <ControlButton
+                    icon="rotate-ccw"
+                    tooltip="Reset View"
+                    onClick={() => {
+                      /* Reset view function */
+                    }}
+                  />
+                  <ControlButton icon="help-circle" tooltip="Help" onClick={() => setInstructions(true)} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Instructions overlay */}
+          <AnimatePresence>
+            {instructions && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-20"
+                onClick={() => setInstructions(false)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  transition={{ type: "spring", damping: 25 }}
+                  className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg p-6 rounded-xl border border-blue-500/30 shadow-xl max-w-md text-white"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-start mb-4">
+                    <div className="bg-blue-500 p-2 rounded-lg mr-4">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-white"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold mb-1">Room Designer Controls</h3>
+                      <p className="text-blue-200/90 text-sm">Interact with your virtual space</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mb-6">
+                    <InstructionItem
+                      icon="mouse-pointer"
+                      title="Select & Move"
+                      description="Click on any furniture to select it, then drag to reposition"
+                    />
+                    <InstructionItem
+                      icon="rotate-cw"
+                      title="Rotate Items"
+                      description="Use the green circle around selected furniture to rotate it"
+                    />
+                    <InstructionItem
+                      icon="edit-2"
+                      title="Edit Mode"
+                      description="Toggle edit mode using the button in the top bar"
+                    />
+                    <InstructionItem
+                      icon="key"
+                      title="Keyboard Controls"
+                      description="Press 'E' to toggle edit mode, 'F' to show FPS counter"
+                    />
+                  </div>
+
+                  <div className="text-center text-xs text-blue-200/70">
+                    This overlay will automatically close in a few seconds
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {!isLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-900">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-t-blue-500 border-r-blue-500 border-b-blue-300 border-l-blue-300 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-blue-200">Preparing your virtual space...</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+    </TooltipProvider>
+  )
+}
 
-      <div className="flex-1 relative">
-        <div className="absolute inset-0" ref={mountRef}></div>
+// Helper Components
+function ControlButton({ icon, tooltip, onClick }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button onClick={onClick} className="p-3 hover:bg-white/10 transition-colors">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-blue-200"
+          >
+            {icon === "zoom-in" && (
+              <>
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </>
+            )}
+            {icon === "zoom-out" && (
+              <>
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </>
+            )}
+            {icon === "rotate-ccw" && (
+              <>
+                <path d="M3 2v6h6"></path>
+                <path d="M3 8a9 9 0 1 0 2.83-6.36L3 8"></path>
+              </>
+            )}
+            {icon === "help-circle" && (
+              <>
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </>
+            )}
+          </svg>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p className="text-xs">{tooltip}</p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
 
-        {/* FPS Counter */}
-        <div
-          ref={fpsCounterRef}
-          className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm"
-          style={{ display: "none" }}
+function InstructionItem({ icon, title, description }) {
+  return (
+    <div className="flex items-start">
+      <div className="bg-blue-500/20 p-2 rounded mr-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-blue-300"
         >
-          0 FPS
-        </div>
-
-        {instructions && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-            <div className="bg-white/90 backdrop-blur-sm p-6 rounded-lg max-w-md text-center">
-              <h3 className="text-xl font-bold mb-4">Welcome to the Living Room Designer</h3>
-              <ul className="text-left space-y-2 mb-4">
-                <li>• Click and drag to move furniture</li>
-                <li>• Use the green circle around selected items to rotate them</li>
-                <li>• Press 'E' to toggle edit mode</li>
-                <li>• Press 'F' to show/hide FPS counter</li>
-                <li>• The splatter painting will snap to walls automatically</li>
-                <li>• Furniture will not overlap with other pieces</li>
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <div className="text-center">
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-700">Loading 3D Room...</p>
-            </div>
-          </div>
-        )}
+          {icon === "mouse-pointer" && (
+            <>
+              <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+              <path d="M13 13l6 6"></path>
+            </>
+          )}
+          {icon === "rotate-cw" && (
+            <>
+              <path d="M21 2v6h-6"></path>
+              <path d="M21 13a9 9 0 1 1-3-7.7L21 8"></path>
+              <path d="M21 2v6h-6"></path>
+              <path d="M21 13a9 9 0 1 1-3-7.7L21 8"></path>
+            </>
+          )}
+          {icon === "edit-2" && (
+            <>
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </>
+          )}
+          {icon === "key" && (
+            <>
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+            </>
+          )}
+        </svg>
+      </div>
+      <div>
+        <h4 className="text-sm font-medium text-white">{title}</h4>
+        <p className="text-xs text-blue-200/90">{description}</p>
       </div>
     </div>
   )

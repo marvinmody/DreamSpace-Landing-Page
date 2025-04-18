@@ -5,6 +5,19 @@ import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
+const navVariants = {
+  hidden: { opacity: 0, y: -10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.1, 0.9, 0.2, 1],
+      delay: 0.2,
+    },
+  },
+}
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -37,7 +50,10 @@ export default function Navbar() {
   }
 
   return (
-    <header
+    <motion.header
+      variants={navVariants}
+      initial="hidden"
+      animate="visible"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? "bg-black/90 backdrop-blur-md shadow-lg py-3" : "bg-transparent py-5"
       }`}
@@ -89,7 +105,7 @@ export default function Navbar() {
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button
-              onClick={() => scrollToSection("demo")}
+              onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
               className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium transition-all duration-300 relative overflow-hidden"
             >
               Get Started
@@ -145,7 +161,7 @@ export default function Navbar() {
                 </button>
                 <Button
                   className="bg-transparent border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white rounded-full px-6 font-medium w-full mt-2 transition-all duration-300"
-                  onClick={() => scrollToSection("demo")}
+                  onClick={() => window.open("https://dreamspace-liard.vercel.app/", "_blank")}
                 >
                   Get Started
                 </Button>
@@ -154,6 +170,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   )
 }

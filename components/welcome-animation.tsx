@@ -138,13 +138,13 @@ export default function WelcomeAnimation() {
     }
   }, [showAnimation])
 
-  // Enhanced transition when clicking "Enter Dreamspace"
+  // Enhanced smooth transition when clicking "Enter Dreamspace"
   const completeAnimation = () => {
     if (isTransitioning) return // Prevent multiple clicks
 
     setIsTransitioning(true)
 
-    // Set a timeout to match the exit animation duration
+    // Smoother, longer transition
     setTimeout(() => {
       sessionStorage.setItem("hasSeenIntro", "true")
       setShowAnimation(false)
@@ -153,7 +153,7 @@ export default function WelcomeAnimation() {
       setTimeout(() => {
         document.body.style.overflow = "auto"
       }, 100)
-    }, 1800) // Increased duration for smoother transition
+    }, 2200) // Increased duration for smoother transition
   }
 
   // Check if we've already shown the animation in this session
@@ -175,8 +175,8 @@ export default function WelcomeAnimation() {
           exit={{
             opacity: 0,
             transition: {
-              duration: 1.8, // Increased for smoother transition
-              ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for smooth transition
+              duration: 2.2, // Increased for smoother transition
+              ease: [0.1, 0.9, 0.2, 1], // Custom cubic-bezier for silky smooth transition
             },
           }}
         >
@@ -194,9 +194,9 @@ export default function WelcomeAnimation() {
               exit={
                 isTransitioning
                   ? {
-                      scale: 1.2,
+                      scale: 1.1,
                       opacity: 0,
-                      transition: { duration: 1.5 }, // Increased for smoother transition
+                      transition: { duration: 1.8, ease: [0.1, 0.9, 0.2, 1] }, // Smoother transition
                     }
                   : {}
               }
@@ -349,14 +349,15 @@ export default function WelcomeAnimation() {
                 opacity: 1,
                 background: [
                   "radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
-                  "radial-gradient(circle at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,1) 100%)",
+                  "radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,1) 100%)",
                   "rgba(0,0,0,1)",
                 ],
               }}
               transition={{
-                duration: 1.5,
-                delay: 0.3,
+                duration: 2.0,
+                delay: 0.2,
                 times: [0, 0.5, 1],
+                ease: [0.1, 0.9, 0.2, 1], // Smoother easing
               }}
             />
           )}

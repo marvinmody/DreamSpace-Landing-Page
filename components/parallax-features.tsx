@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { MousePointerClick, Sparkles, Layers, Palette, Share2, CloudSun } from "lucide-react"
+import { Sparkles, Layers } from "lucide-react"
 import ParallaxSection from "./parallax-section"
 
 export default function ParallaxFeatures() {
@@ -46,39 +46,16 @@ export default function ParallaxFeatures() {
         >
           {[
             {
-              icon: <MousePointerClick className="w-6 h-6 text-dreamspace-navy" />,
-              title: "Drag-and-Drop Tools",
-              description:
-                "Move furniture and decor effortlessly with intuitive drag-and-drop functionality and smooth animations.",
-            },
-            {
               icon: <Sparkles className="w-6 h-6 text-dreamspace-navy" />,
-              title: "AI Personalization",
+              title: "AI-Powered Design",
               description:
                 "Generate room designs based on simple user prompts and preferences with photorealistic results.",
             },
             {
               icon: <Layers className="w-6 h-6 text-dreamspace-navy" />,
-              title: "3D Isometric Views",
-              description: "Explore spaces in a visually unique 3D perspective with realistic lighting and shadows.",
-            },
-            {
-              icon: <Palette className="w-6 h-6 text-dreamspace-navy" />,
-              title: "Style Presets",
+              title: "Isometric Room View",
               description:
-                "Choose from a variety of design styles to instantly transform your space with a single click.",
-            },
-            {
-              icon: <Share2 className="w-6 h-6 text-dreamspace-navy" />,
-              title: "Share & Collaborate",
-              description:
-                "Share your designs with friends, family, or clients for feedback and real-time collaboration.",
-            },
-            {
-              icon: <CloudSun className="w-6 h-6 text-dreamspace-navy" />,
-              title: "Lighting Simulation",
-              description:
-                "See how different lighting conditions affect your space throughout the day with realistic rendering.",
+                "Visualize your room in an isometric perspective for a unique and comprehensive view of your space.",
             },
           ].map((feature, index) => (
             <motion.div

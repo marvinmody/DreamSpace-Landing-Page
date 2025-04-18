@@ -20,6 +20,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Raleway:wght@200;300;400&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <ParallaxProvider>{children}</ParallaxProvider>
